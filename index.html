@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>Hello, World!</title>
+</head>
+<body>
+  <h1>
+    Hello, World!
+  </h1>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Expense Tracker</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f2edff;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            max-width: 500px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px #ccc;
+        }
+
+        h1 {
+            color: #663399;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+
+        .card {
+            background: #eee8ff;
+            padding: 12px;
+            border-radius: 10px;
+            flex: 1;
+        }
+
+        input, select {
+            padding: 12px;
+            margin: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #663399;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        li {
+            list-style: none;
+            padding: 12px;
+            margin: 10px 0;
+            background: #f3efff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete {
+            background: #d9534f;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Smart Expense Tracker</h1>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Income</h3>
+            <p id="income">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Expenses</h3>
+            <p id="expense">₹0</p>
+        </div>
+    </div>
+
+    <h2>Balance: ₹<span id="balance">0</span></h2>
+
+    <h3>Add Transaction</h3>
+
+    <input type="text" id="title"
+           placeholder="Enter title">
+
+    <br>
+
+    <input type="number" id="amount"
+           placeholder="Enter amount">
+
+    <br>
+
+    <select id="type">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+    </select>
+
+    <button onclick="addTransaction()">Add</button>
+
+    <h3>Transaction History</h3>
+
+    <ul id="history"></ul>
+
+</div>
+
+<script>
+
+let transactions = [];
+
+function addTransaction() {
+
+    let title = document.getElementById("title").value.trim();
+    let amount = Number(document.getElementById("amount").value);
+    let type = document.getElementById("type").value;
+
+    if (title === "" || amount <= 0 || !Number.isFinite(amount)) {
+        alert("Please enter valid details!");
+        return;
+    }
+
+    transactions.push({
+        title: title,
+        amount: amount,
+        type: type
+    });
+
+    document.getElementById("title").value = "";
+    document.getElementById("amount").value = "";
+
+    updateTracker();
+}
+
+function updateTracker() {
+
+    let income = 0;
+    let expense = 0;
+
+    let history = document.getElementById("history");
+    history.innerHTML = "";
+
+    transactions.forEach((item, index) => {
+
+        if (item.type === "income") {
+            income += item.amount;
+        } else {
+            expense += item.amount;
+        }
+
+        let li = document.createElement("li");
+
+        let text = document.createElement("span");
+        text.textContent = item.title + " - ₹" + item.amount;
+
+        let button = document.createElement("button");
+        button.textContent = "Delete";
+        button.className = "delete";
+
+        button.onclick = function() {
+            transactions.splice(index, 1);
+            updateTracker();
+        };
+
+        li.appendChild(text);
+        li.appendChild(button);
+
+        history.appendChild(li);
+    });
+
+    document.getElementById("income").textContent = "₹" + income;
+    document.getElementById("expense").textContent = "₹" + expense;
+    document.getElementById("balance").textContent = income - expense;
+}
+
+</script>
+
+</body>
+</html>
+  
